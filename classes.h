@@ -37,9 +37,6 @@ class block {
     bool operator<(const block &other) const {
         return heuristic > other.heuristic; // Note: Min heap based on heuristic
     }
-    // void getHeuristic() {
-    //     // heuristic; // Note: Min heap based on heuristic
-    // }
 };
 class List {};
 class matrix {
@@ -50,11 +47,9 @@ class matrix {
 
     matrix(int r, int c);
     int DFSmove(Cursor &cursor);
-    int bestFirstMove(); //
     pair<int, int> updateBSList(priority_queue<block> &list, block nextBlock);
     void printColors();
     void initHeuristics(vector<pair<int, int>> goalPositions);
-    void setBlockHeuristic();
     void getPath(Cursor &cursor, pair<int, int> &goal);
     void printHeuristics();
     ~matrix();
