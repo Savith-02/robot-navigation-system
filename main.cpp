@@ -38,6 +38,8 @@ int main() {
     inputFile.close();
 
     matrix Matrix(gridSize[0], gridSize[1]); // Initialize grid
+    Matrix.initHeuristics(goalPositions);
+    Matrix.printHeuristics();
     Matrix.blocks[startingPos[1]][startingPos[0]].color = "red";
 
     Cursor cursor(startingPos); // Initialise the position tracker
@@ -46,35 +48,62 @@ int main() {
     markWalls(Matrix, walls);              // Mark the walls
     Matrix.printColors();                  // Prints the grid
 
-    while (cursor.atGreen == false) { // DFS
-        switch (Matrix.DFSmove(cursor)) {
-        case 0:
-            cursor.path.push_back("top");
-            break;
-        case 1:
-            cursor.path.push_back("right");
-            break;
-        case 2:
-            cursor.path.push_back("bottom");
-            break;
-        case 3:
-            cursor.path.push_back("left");
-            break;
-        case 4:
-            cursor.path.pop_back();
-            cursor.backTrack(Matrix);
-        }
-    }
-    cursor.printPath();
-    // cursor.cursorReset();
-
-    // priority_queue<block> blockList;
-    // block nextBlock;
-    // blockList.push(Matrix.blocks[cursor.pos_y][cursor.pos_x]);
-    // while (cursor.atGreen == false && !blockList.empty()) { // Best First
-    //     nextBlock = blockList.top();
-    //     blockList.pop();
-    //     Matrix.updateBSList(blockList, nextBlock);
+    // while (cursor.atGreen == false) { // DFS
+    //     switch (Matrix.DFSmove(cursor)) {
+    //     case 0:
+    //         cursor.path.push_back("top");
+    //         break;
+    //     case 1:
+    //         cursor.path.push_back("right");
+    //         break;
+    //     case 2:
+    //         cursor.path.push_back("bottom");
+    //         break;
+    //     case 3:
+    //         cursor.path.push_back("left");
+    //         break;
+    //     case 4:
+    //         cursor.path.pop_back();
+    //         cursor.backTrack(Matrix);
+    //     }
     // }
+    // cursor.cursorReset();
+    // cursor.printPath();
+
+    priority_queue<block> blockList;
+    block nextBlock;
+    pair<int, int> returnValue;
+    blockList.push(Matrix.blocks[cursor.pos_y][cursor.pos_x]);
+
+    while (cursor.atGreen == false && !blockList.empty()) { // Best First
+        printf("in main loop ");
+        nextBlock = blockList.top();
+        blockList.pop();
+        returnValue = Matrix.updateBSList(blockList, nextBlock);
+        cout << returnValue.first << endl;
+        if (returnValue != pair(-1, -1)) {
+            cursor.atGreen = true;
+            Matrix.getPath(cursor, returnValue);
+        }
+        // switch (returnValue) {
+        // case 0:
+        //     cursor.path.push_back("top");
+        //     break;
+        // case 1:
+        //     cursor.path.push_back("right");
+        //     break;
+        // case 2:
+        //     cursor.path.push_back("bottom");
+        //     break;
+        // case 3:
+        //     cursor.path.push_back("left");
+        //     break;
+        // case 4:
+        //     cursor.path.pop_back();
+        //     cursor.atGreen = true;
+        //     break;
+        // }
+    }
     return 0;
+    cursor.printPath();
 }
