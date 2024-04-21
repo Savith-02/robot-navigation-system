@@ -20,10 +20,6 @@ class Cursor {
 };
 class block {
   public:
-    int top;
-    int right;
-    int bottom;
-    int left;
     string homePath;
     string color;
 };
@@ -31,7 +27,6 @@ class matrix {
   public:
     int rows;
     int cols;
-    string color;
     block **blocks; // Pointer to a pointer for dynamic memory allocation
 
     matrix(int r, int c);

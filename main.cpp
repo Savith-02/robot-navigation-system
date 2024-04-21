@@ -8,7 +8,6 @@
 using namespace std;
 
 int main() {
-    // Input dimensions
     ifstream inputFile("input.txt");
     if (!inputFile) {
         cerr << "Error: Unable to open input file!" << endl;
@@ -29,6 +28,7 @@ int main() {
     vector<pair<int, int>> goalPositions = parseGoalPos(line);
     // printGoals(goalPositions);
 
+    // Parse the walls
     vector<tuple<int, int, int, int>> walls;
     while (getline(inputFile, line)) {
         walls.push_back(parseLine(line));
@@ -36,17 +36,18 @@ int main() {
     // printWalls(walls);
     inputFile.close();
 
-    matrix Matrix(gridSize[0], gridSize[1]);
+    matrix Matrix(gridSize[0], gridSize[1]); // Initialize grid
     Matrix.blocks[startingPos[1]][startingPos[0]].color = "red";
 
-    Cursor cursor;
+    Cursor cursor; // Initialise the position tracker
     cursor.pos_x = startingPos[0];
     cursor.pos_y = startingPos[1];
-    markBlockGoals(Matrix, goalPositions);
-    markWalls(Matrix, walls);
-    Matrix.printColors();
 
-    while (cursor.atGreen == false) {
+    markBlockGoals(Matrix, goalPositions); // Mark the greens
+    markWalls(Matrix, walls);              // Mark the walls
+    Matrix.printColors();                  // Prints the grid
+
+    while (cursor.atGreen == false) { // DFS
         switch (Matrix.move(cursor)) {
         case 0:
             cursor.path.push_back("top");
@@ -63,7 +64,6 @@ int main() {
         case 4:
             cursor.path.pop_back();
             cursor.backTrack(Matrix);
-            cursor.atGreen = true;
         }
     }
     cursor.printPath();

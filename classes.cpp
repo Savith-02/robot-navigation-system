@@ -13,10 +13,6 @@ matrix::matrix(int r, int c) : rows(r), cols(c) {
     }
     for (int i = 0; i < rows; ++i) {
         for (int j = 0; j < cols; ++j) {
-            blocks[i][j].top = 0;
-            blocks[i][j].left = 0;
-            blocks[i][j].bottom = 0;
-            blocks[i][j].right = 0;
             blocks[i][j].color = "white";
         }
     }
@@ -25,10 +21,11 @@ int matrix::move(Cursor &cursor) {
     int returnValue;
 
     // GotoTop
+    cout << "y: " << cursor.pos_y << ", x: " << cursor.pos_x << endl;
     if (cursor.pos_y - 1 >= 0 &&
         (blocks[cursor.pos_y - 1][cursor.pos_x].color == "white" ||
          blocks[cursor.pos_y - 1][cursor.pos_x].color == "green")) {
-        blocks[cursor.pos_y][cursor.pos_x].homePath = "top";
+        blocks[cursor.pos_y - 1][cursor.pos_x].homePath = "bottom";
         cursor.pos_y--;
         returnValue = 0;
     }
@@ -36,7 +33,7 @@ int matrix::move(Cursor &cursor) {
     else if (cursor.pos_x + 1 < cols &&
              (blocks[cursor.pos_y][cursor.pos_x + 1].color == "white" ||
               blocks[cursor.pos_y][cursor.pos_x + 1].color == "green")) {
-        blocks[cursor.pos_y][cursor.pos_x].homePath = "right";
+        blocks[cursor.pos_y][cursor.pos_x + 1].homePath = "left";
         cursor.pos_x++;
         returnValue = 1;
     }
@@ -44,7 +41,7 @@ int matrix::move(Cursor &cursor) {
     else if (cursor.pos_y + 1 < rows &&
              (blocks[cursor.pos_y + 1][cursor.pos_x].color == "white" ||
               blocks[cursor.pos_y + 1][cursor.pos_x].color == "green")) {
-        blocks[cursor.pos_y][cursor.pos_x].homePath = "bottom";
+        blocks[cursor.pos_y + 1][cursor.pos_x].homePath = "top";
         cursor.pos_y++;
         returnValue = 2;
     }
@@ -52,7 +49,7 @@ int matrix::move(Cursor &cursor) {
     else if (cursor.pos_x - 1 >= 0 &&
              (blocks[cursor.pos_y][cursor.pos_x - 1].color == "white" ||
               blocks[cursor.pos_y][cursor.pos_x - 1].color == "green")) {
-        blocks[cursor.pos_y][cursor.pos_x].homePath = "left";
+        blocks[cursor.pos_y][cursor.pos_x - 1].homePath = "right";
         cursor.pos_x--;
         returnValue = 3;
     }
@@ -62,7 +59,7 @@ int matrix::move(Cursor &cursor) {
     }
 
     if (blocks[cursor.pos_y][cursor.pos_x].color == "green") {
-        cursor.atGreen = true;
+        cursor.atGreen = true; // Signal the finish
     } else {
         blocks[cursor.pos_y][cursor.pos_x].color = "black";
     }
@@ -101,6 +98,7 @@ void Cursor::printPath() {
 }
 void Cursor::backTrack(const matrix &Matrix) {
     string backTrackDirection = Matrix.blocks[pos_y][pos_x].homePath;
+    cout << "BackTracking" << endl;
     if (backTrackDirection == "bottom") {
         pos_y++;
     } else if (backTrackDirection == "left") {
@@ -108,7 +106,7 @@ void Cursor::backTrack(const matrix &Matrix) {
     } else if (backTrackDirection == "right") {
         pos_x++;
     } else {
-        pos_y++;
+        pos_y--;
     }
 }
 void Cursor::printCoordinates() {
