@@ -1,6 +1,7 @@
 #ifndef CLASSES_H
 #define CLASSES_H
 #include <iostream>
+#include <queue>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -24,12 +25,18 @@ class Cursor {
     void backTrack(const matrix &Matrix); //
 };
 class block {
-    int heuristic; //
+    int heuristic; // BS
 
   public:
     string homePath;
     string color;
+    pair<int, int> parent; // BS
+
+    bool operator<(const block &other) const {
+        return heuristic > other.heuristic; // Note: Min heap based on heuristic
+    }
 };
+class List {};
 class matrix {
   public:
     int rows;
@@ -39,8 +46,9 @@ class matrix {
     matrix(int r, int c);
     int DFSmove(Cursor &cursor);
     int bestFirstMove(); //
+    void updateBSList(priority_queue<block> &list);
     void printColors();
-    void setBlockeuristic();
+    void setBlockHeuristic();
     ~matrix();
 };
 #endif

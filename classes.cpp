@@ -78,7 +78,7 @@ int matrix::DFSmove(Cursor &cursor) {
 }
 int matrix::bestFirstMove() {
 }
-void setBlockeuristic() {
+void setBlockHeuristic() {
 }
 
 void matrix::printColors() {

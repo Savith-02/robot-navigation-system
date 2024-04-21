@@ -2,6 +2,7 @@
 #include "functions.cpp"
 #include <fstream>
 #include <iostream>
+#include <queue>
 #include <sstream>
 #include <tuple>
 
@@ -66,7 +67,14 @@ int main() {
     // }
     // cursor.printPath();
     // cursor.cursorReset();
-    while (cursor.atGreen == false) { // DFS
+
+    priority_queue<block> blockList;
+    block nextBlock;
+    blockList.push(Matrix.blocks[cursor.pos_y][cursor.pos_x]);
+    while (cursor.atGreen == false && !blockList.empty()) { // Best First
+        nextBlock = blockList.top();
+        blockList.pop();
+        Matrix.updateBSList(blockList);
     }
     return 0;
 }
