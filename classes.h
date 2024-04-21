@@ -17,7 +17,6 @@ class Cursor {
     int pos_y;
     int pos_x;
     bool atGreen = false;
-    void cursorReset(); //
     vector<string> path;
     Cursor(vector<int> start); //
     void printPath();

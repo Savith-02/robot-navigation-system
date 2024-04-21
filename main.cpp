@@ -8,8 +8,19 @@
 
 using namespace std;
 
-int main() {
-    ifstream inputFile("input.txt");
+int main(int argc, char *argv[]) {
+    // Check if the number of command-line arguments is correct
+    if (argc != 3) {
+        cerr << "Usage: " << argv[0] << " <filename> <method>" << endl;
+        return 1; // Exit with error
+    }
+    string filename = argv[1];
+    string method = argv[2];
+
+    // Use the stored values
+    cout << "\nFilename: " << filename << " Method: " << method << endl;
+
+    ifstream inputFile(filename);
     if (!inputFile) {
         cerr << "Error: Unable to open input file!" << endl;
         return 1;
@@ -46,45 +57,50 @@ int main() {
     markWalls(Matrix, walls);              // Mark the walls
     Matrix.printColors();                  // Prints the grid
 
-    // while (cursor.atGreen == false) { // DFS
-    //     switch (Matrix.DFSmove(cursor)) {
-    //     case 0:
-    //         cursor.path.push_back("top");
-    //         break;
-    //     case 1:
-    //         cursor.path.push_back("right");
-    //         break;
-    //     case 2:
-    //         cursor.path.push_back("bottom");
-    //         break;
-    //     case 3:
-    //         cursor.path.push_back("left");
-    //         break;
-    //     case 4:
-    //         cursor.path.pop_back();
-    //         cursor.backTrack(Matrix);
-    //     }
-    // }
-    // cursor.printPath();
-    // cursor.cursorReset();
+    if (method == "DFS") {
 
-    Matrix.initHeuristics(goalPositions);
-    // Matrix.printHeuristics();
-    priority_queue<block> blockList;
-    block nextBlock;
-    pair<int, int> returnValue;
-    Matrix.blocks[cursor.pos_y][cursor.pos_x].color = "grey";
-    blockList.push(Matrix.blocks[cursor.pos_y][cursor.pos_x]);
-
-    while (cursor.atGreen == false && !blockList.empty()) { // Best First
-        nextBlock = blockList.top();
-        blockList.pop();
-        returnValue = Matrix.updateBSList(blockList, nextBlock);
-        if (returnValue != pair(-1, -1)) {
-            cursor.atGreen = true;
-            Matrix.getPath(cursor, returnValue);
+        while (cursor.atGreen == false) { // DFS
+            switch (Matrix.DFSmove(cursor)) {
+            case 0:
+                cursor.path.push_back("top");
+                break;
+            case 1:
+                cursor.path.push_back("right");
+                break;
+            case 2:
+                cursor.path.push_back("bottom");
+                break;
+            case 3:
+                cursor.path.push_back("left");
+                break;
+            case 4:
+                cursor.path.pop_back();
+                cursor.backTrack(Matrix);
+            }
         }
     }
+    // cursor.printPath();
+    else if (method == "GBFS") {
+
+        Matrix.initHeuristics(goalPositions);
+        // Matrix.printHeuristics();
+        priority_queue<block> blockList;
+        block nextBlock;
+        pair<int, int> returnValue;
+        Matrix.blocks[cursor.pos_y][cursor.pos_x].color = "grey";
+        blockList.push(Matrix.blocks[cursor.pos_y][cursor.pos_x]);
+
+        while (cursor.atGreen == false && !blockList.empty()) { // Best First
+            nextBlock = blockList.top();
+            blockList.pop();
+            returnValue = Matrix.updateBSList(blockList, nextBlock);
+            if (returnValue != pair(-1, -1)) {
+                cursor.atGreen = true;
+                Matrix.getPath(cursor, returnValue);
+            }
+        }
+    }
+
     cursor.printPath();
     return 0;
 }

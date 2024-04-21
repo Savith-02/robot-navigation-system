@@ -12,11 +12,6 @@ Cursor::Cursor(vector<int> start) {
     pos_x = start[0];
     pos_y = start[1];
 }
-void Cursor::cursorReset() {
-    pos_x = start_x;
-    pos_y = start_y;
-    atGreen = false;
-}
 matrix::matrix(int r, int c) : rows(r), cols(c) {
     // Allocate memory for rows
     blocks = new block *[rows];
