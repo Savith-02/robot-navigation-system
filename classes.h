@@ -10,21 +10,20 @@ using namespace std;
 
 class matrix;
 class Cursor {
-    int start_x; //
-    int start_y; //
+    int start_x;
+    int start_y;
 
   public:
     int pos_y;
     int pos_x;
     bool atGreen = false;
     vector<string> path;
-    Cursor(vector<int> start); //
+    Cursor(vector<int> start);
     void printPath();
     void printCoordinates();
-    void backTrack(const matrix &Matrix); //
+    void backTrack(const matrix &Matrix);
 };
 class block {
-
   public:
     int heuristic; // BS
     int row;
@@ -43,6 +42,7 @@ class matrix {
     int rows;
     int cols;
     block **blocks; // Pointer to a pointer for dynamic memory allocation
+    int nodesTrversed = 0;
 
     matrix(int r, int c);
     int DFSmove(Cursor &cursor);
@@ -51,6 +51,7 @@ class matrix {
     void initHeuristics(vector<pair<int, int>> goalPositions);
     void getPath(Cursor &cursor, pair<int, int> &goal);
     void printHeuristics();
+    pair<int, int> updateBFSQueue(block nextBlock, queue<block> &que);
     ~matrix();
 };
 #endif

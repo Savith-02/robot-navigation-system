@@ -18,7 +18,8 @@ int main(int argc, char *argv[]) {
     string method = argv[2];
 
     // Use the stored values
-    cout << "\nFilename: " << filename << " Method: " << method << endl;
+    // cout << "\nFilename: " << filename << " Method: " << method << endl;
+    cout << filename << " " << method << endl;
 
     ifstream inputFile(filename);
     if (!inputFile) {
@@ -55,20 +56,21 @@ int main(int argc, char *argv[]) {
 
     markBlockGoals(Matrix, goalPositions); // Mark the greens
     markWalls(Matrix, walls);              // Mark the walls
-    Matrix.printColors();                  // Prints the grid
+    // Matrix.printColors();                  // Prints the grid
+    pair<int, int> endGoal; // Store the goal reached
 
     if (method == "DFS") {
 
         while (cursor.atGreen == false) { // DFS
             switch (Matrix.DFSmove(cursor)) {
             case 0:
-                cursor.path.push_back("top");
+                cursor.path.push_back("up");
                 break;
             case 1:
                 cursor.path.push_back("right");
                 break;
             case 2:
-                cursor.path.push_back("bottom");
+                cursor.path.push_back("down");
                 break;
             case 3:
                 cursor.path.push_back("left");
@@ -78,6 +80,7 @@ int main(int argc, char *argv[]) {
                 cursor.backTrack(Matrix);
             }
         }
+        endGoal = pair(cursor.pos_y, cursor.pos_x);
     }
     // cursor.printPath();
     else if (method == "GBFS") {
@@ -86,21 +89,41 @@ int main(int argc, char *argv[]) {
         // Matrix.printHeuristics();
         priority_queue<block> blockList;
         block nextBlock;
-        pair<int, int> returnValue;
         Matrix.blocks[cursor.pos_y][cursor.pos_x].color = "grey";
         blockList.push(Matrix.blocks[cursor.pos_y][cursor.pos_x]);
 
         while (cursor.atGreen == false && !blockList.empty()) { // Best First
             nextBlock = blockList.top();
             blockList.pop();
-            returnValue = Matrix.updateBSList(blockList, nextBlock);
-            if (returnValue != pair(-1, -1)) {
+            endGoal = Matrix.updateBSList(blockList, nextBlock);
+            if (endGoal != pair(-1, -1)) {
                 cursor.atGreen = true;
-                Matrix.getPath(cursor, returnValue);
+                Matrix.getPath(cursor, endGoal);
             }
         }
-    }
+    } else if (method == "BFS") {
 
+        queue<block> que;
+        block nextBlock;
+        Matrix.blocks[cursor.pos_y][cursor.pos_x].color = "grey";
+        que.push(Matrix.blocks[cursor.pos_y][cursor.pos_x]);
+
+        while (cursor.atGreen == false && !que.empty()) {
+            nextBlock = que.front();
+            que.pop();
+            endGoal = Matrix.updateBFSQueue(nextBlock, que);
+            if (endGoal != pair(-1, -1)) {
+                cursor.atGreen = true;
+                Matrix.getPath(cursor, endGoal);
+            }
+        }
+    } else {
+
+        cout << "Invalid method";
+        return 1;
+    }
+    cout << "<Node (" << endGoal.second << ", " << endGoal.first << ")> ";
+    cout << Matrix.nodesTrversed;
     cursor.printPath();
     return 0;
 }

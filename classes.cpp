@@ -2,16 +2,62 @@
 #include <algorithm>
 #include <cmath>
 #include <iostream>
+#include <queue>
 #include <sstream>
 #include <string>
 #include <vector>
 
-Cursor::Cursor(vector<int> start) {
-    start_x = start[0];
-    start_y = start[1];
-    pos_x = start[0];
-    pos_y = start[1];
+pair<int, int> matrix::updateBFSQueue(block nextBlock, queue<block> &que) {
+    int returnValue;
+    int x_coord = nextBlock.col;
+    int y_coord = nextBlock.row;
+    nodesTrversed++;
+    // GotoUp
+    // cout << "(" << nextBlock.row << ", " << nextBlock.col << ") -> ";
+    if (y_coord - 1 >= 0 && (blocks[y_coord - 1][x_coord].color == "white" ||
+                             blocks[y_coord - 1][x_coord].color == "green")) {
+        blocks[y_coord - 1][x_coord].homePath = "down";
+        if (blocks[y_coord - 1][x_coord].color == "green") {
+            return pair(y_coord - 1, x_coord);
+        }
+        blocks[y_coord - 1][x_coord].color = "grey";
+        que.push(blocks[y_coord - 1][x_coord]);
+    }
+    // GotoRight
+    if (x_coord + 1 < cols && (blocks[y_coord][x_coord + 1].color == "white" ||
+                               blocks[y_coord][x_coord + 1].color == "green")) {
+        blocks[y_coord][x_coord + 1].homePath = "left";
+        if (blocks[y_coord][x_coord + 1].color == "green") {
+            return pair(y_coord, x_coord + 1);
+        }
+        blocks[y_coord][x_coord + 1].color = "grey";
+        que.push(blocks[y_coord][x_coord + 1]);
+    }
+    // GotoDown
+    if (y_coord + 1 < rows && (blocks[y_coord + 1][x_coord].color == "white" ||
+                               blocks[y_coord + 1][x_coord].color == "green")) {
+        blocks[y_coord + 1][x_coord].homePath = "up";
+        if (blocks[y_coord + 1][x_coord].color == "green") {
+            return pair(y_coord + 1, x_coord);
+        }
+        blocks[y_coord + 1][x_coord].color = "grey";
+        que.push(blocks[y_coord + 1][x_coord]);
+    }
+    // GotoLeft
+    if (x_coord - 1 >= 0 && (blocks[y_coord][x_coord - 1].color == "white" ||
+                             blocks[y_coord][x_coord - 1].color == "green")) {
+        blocks[y_coord][x_coord - 1].homePath = "right";
+        if (blocks[y_coord][x_coord - 1].color == "green") {
+            return pair(y_coord, x_coord - 1);
+        }
+        blocks[y_coord][x_coord - 1].color = "grey";
+        que.push(blocks[y_coord][x_coord - 1]);
+    }
+    blocks[y_coord][x_coord].color = "black";
+    // cout << endl;
+    return pair(-1, -1);
 }
+
 matrix::matrix(int r, int c) : rows(r), cols(c) {
     // Allocate memory for rows
     blocks = new block *[rows];
@@ -44,12 +90,13 @@ void matrix::initHeuristics(vector<pair<int, int>> goalPositions) {
 }
 int matrix::DFSmove(Cursor &cursor) {
     int returnValue;
-    // GotoTop
+    nodesTrversed++;
+    // GotoUp
     // cout << "y: " << cursor.pos_y << ", x: " << cursor.pos_x << endl;
     if (cursor.pos_y - 1 >= 0 &&
         (blocks[cursor.pos_y - 1][cursor.pos_x].color == "white" ||
          blocks[cursor.pos_y - 1][cursor.pos_x].color == "green")) {
-        blocks[cursor.pos_y - 1][cursor.pos_x].homePath = "bottom";
+        blocks[cursor.pos_y - 1][cursor.pos_x].homePath = "down";
         cursor.pos_y--;
         returnValue = 0;
     }
@@ -61,11 +108,11 @@ int matrix::DFSmove(Cursor &cursor) {
         cursor.pos_x++;
         returnValue = 1;
     }
-    // GotoBottom
+    // GotoDown
     else if (cursor.pos_y + 1 < rows &&
              (blocks[cursor.pos_y + 1][cursor.pos_x].color == "white" ||
               blocks[cursor.pos_y + 1][cursor.pos_x].color == "green")) {
-        blocks[cursor.pos_y + 1][cursor.pos_x].homePath = "top";
+        blocks[cursor.pos_y + 1][cursor.pos_x].homePath = "up";
         cursor.pos_y++;
         returnValue = 2;
     }
@@ -92,14 +139,15 @@ int matrix::DFSmove(Cursor &cursor) {
 }
 pair<int, int> matrix::updateBSList(priority_queue<block> &list,
                                     block nextBlock) {
+    nodesTrversed++;
     int returnValue;
     int x_coord = nextBlock.col;
     int y_coord = nextBlock.row;
-    // GotoTop
+    // GotoUp
     // cout << "(" << nextBlock.row << ", " << nextBlock.col << ") -> ";
     if (y_coord - 1 >= 0 && (blocks[y_coord - 1][x_coord].color == "white" ||
                              blocks[y_coord - 1][x_coord].color == "green")) {
-        blocks[y_coord - 1][x_coord].homePath = "bottom";
+        blocks[y_coord - 1][x_coord].homePath = "down";
         if (blocks[y_coord - 1][x_coord].color == "green") {
             return pair(y_coord - 1, x_coord);
         }
@@ -116,10 +164,10 @@ pair<int, int> matrix::updateBSList(priority_queue<block> &list,
         blocks[y_coord][x_coord + 1].color = "grey";
         list.push(blocks[y_coord][x_coord + 1]);
     }
-    // GotoBottom
+    // GotoDown
     if (y_coord + 1 < rows && (blocks[y_coord + 1][x_coord].color == "white" ||
                                blocks[y_coord + 1][x_coord].color == "green")) {
-        blocks[y_coord + 1][x_coord].homePath = "top";
+        blocks[y_coord + 1][x_coord].homePath = "up";
         if (blocks[y_coord + 1][x_coord].color == "green") {
             return pair(y_coord + 1, x_coord);
         }
@@ -141,19 +189,20 @@ pair<int, int> matrix::updateBSList(priority_queue<block> &list,
     return pair(-1, -1);
 }
 void matrix::getPath(Cursor &cursor, pair<int, int> &goal) {
+    // cout << goal.second << goal.first << endl;
     Cursor backtracker({goal.second, goal.first});
     string direction;
     while (blocks[backtracker.pos_y][backtracker.pos_x].homePath != "") {
-
         direction = blocks[backtracker.pos_y][backtracker.pos_x].homePath;
-        if (direction == "bottom") {
-            cursor.path.insert(cursor.path.begin(), "top");
+        // cout << direction << endl;
+        if (direction == "down") {
+            cursor.path.insert(cursor.path.begin(), "up");
             backtracker.pos_y++;
         } else if (direction == "left") {
             cursor.path.insert(cursor.path.begin(), "right");
             backtracker.pos_x--;
-        } else if (direction == "top") {
-            cursor.path.insert(cursor.path.begin(), "bottom");
+        } else if (direction == "up") {
+            cursor.path.insert(cursor.path.begin(), "down");
             backtracker.pos_y--;
         } else if (direction == "right") {
             cursor.path.insert(cursor.path.begin(), "left");
@@ -193,17 +242,26 @@ matrix::~matrix() {
     delete[] blocks;
 }
 
+Cursor::Cursor(vector<int> start) {
+    start_x = start[0];
+    start_y = start[1];
+    pos_x = start[0];
+    pos_y = start[1];
+}
 void Cursor::printPath() {
-    cout << "\nPath: ";
-    for (const auto &str : path) {
-        cout << str << " ";
+    cout << "\n[";
+    for (size_t i = 0; i < path.size(); ++i) {
+        cout << "'" << path[i] << "'";
+        if (i < path.size() - 1) {
+            cout << ", ";
+        }
     }
-    cout << "\n" << endl;
+    cout << "]\n" << endl;
 }
 void Cursor::backTrack(const matrix &Matrix) {
     string backTrackDirection = Matrix.blocks[pos_y][pos_x].homePath;
-    cout << "BackTracking" << endl;
-    if (backTrackDirection == "bottom") {
+    // cout << "BackTracking" << endl;
+    if (backTrackDirection == "down") {
         pos_y++;
     } else if (backTrackDirection == "left") {
         pos_x--;
