@@ -76,7 +76,10 @@ int matrix::DFSmove(Cursor &cursor) {
 
     return returnValue;
 }
+void matrix::updateBSList(priority_queue<block> &list, block nextBlock) {
+}
 int matrix::bestFirstMove() {
+    return 0;
 }
 void setBlockHeuristic() {
 }

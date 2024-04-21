@@ -46,35 +46,35 @@ int main() {
     markWalls(Matrix, walls);              // Mark the walls
     Matrix.printColors();                  // Prints the grid
 
-    // while (cursor.atGreen == false) { // DFS
-    //     switch (Matrix.DFSmove(cursor)) {
-    //     case 0:
-    //         cursor.path.push_back("top");
-    //         break;
-    //     case 1:
-    //         cursor.path.push_back("right");
-    //         break;
-    //     case 2:
-    //         cursor.path.push_back("bottom");
-    //         break;
-    //     case 3:
-    //         cursor.path.push_back("left");
-    //         break;
-    //     case 4:
-    //         cursor.path.pop_back();
-    //         cursor.backTrack(Matrix);
-    //     }
-    // }
-    // cursor.printPath();
+    while (cursor.atGreen == false) { // DFS
+        switch (Matrix.DFSmove(cursor)) {
+        case 0:
+            cursor.path.push_back("top");
+            break;
+        case 1:
+            cursor.path.push_back("right");
+            break;
+        case 2:
+            cursor.path.push_back("bottom");
+            break;
+        case 3:
+            cursor.path.push_back("left");
+            break;
+        case 4:
+            cursor.path.pop_back();
+            cursor.backTrack(Matrix);
+        }
+    }
+    cursor.printPath();
     // cursor.cursorReset();
 
-    priority_queue<block> blockList;
-    block nextBlock;
-    blockList.push(Matrix.blocks[cursor.pos_y][cursor.pos_x]);
-    while (cursor.atGreen == false && !blockList.empty()) { // Best First
-        nextBlock = blockList.top();
-        blockList.pop();
-        Matrix.updateBSList(blockList);
-    }
+    // priority_queue<block> blockList;
+    // block nextBlock;
+    // blockList.push(Matrix.blocks[cursor.pos_y][cursor.pos_x]);
+    // while (cursor.atGreen == false && !blockList.empty()) { // Best First
+    //     nextBlock = blockList.top();
+    //     blockList.pop();
+    //     Matrix.updateBSList(blockList, nextBlock);
+    // }
     return 0;
 }

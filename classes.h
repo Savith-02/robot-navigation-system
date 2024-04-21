@@ -46,7 +46,7 @@ class matrix {
     matrix(int r, int c);
     int DFSmove(Cursor &cursor);
     int bestFirstMove(); //
-    void updateBSList(priority_queue<block> &list);
+    void updateBSList(priority_queue<block> &list, block nextBlock);
     void printColors();
     void setBlockHeuristic();
     ~matrix();
