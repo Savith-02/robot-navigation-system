@@ -73,15 +73,17 @@ int main() {
     priority_queue<block> blockList;
     block nextBlock;
     pair<int, int> returnValue;
+    Matrix.blocks[cursor.pos_y][cursor.pos_x].color = "grey";
     blockList.push(Matrix.blocks[cursor.pos_y][cursor.pos_x]);
 
     while (cursor.atGreen == false && !blockList.empty()) { // Best First
-        printf("in main loop ");
+        // printf("in main loop ");
         nextBlock = blockList.top();
         blockList.pop();
         returnValue = Matrix.updateBSList(blockList, nextBlock);
-        cout << returnValue.first << endl;
+        // cout << " Not green" << endl;
         if (returnValue != pair(-1, -1)) {
+            printf("in  ");
             cursor.atGreen = true;
             Matrix.getPath(cursor, returnValue);
         }
@@ -103,7 +105,7 @@ int main() {
         //     cursor.atGreen = true;
         //     break;
         // }
+        cursor.printPath();
     }
     return 0;
-    cursor.printPath();
 }

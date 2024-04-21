@@ -99,61 +99,56 @@ int matrix::DFSmove(Cursor &cursor) {
 }
 pair<int, int> matrix::updateBSList(priority_queue<block> &list,
                                     block nextBlock) {
-    cout << "Inside update";
     int returnValue;
-    int x_coord = nextBlock.row;
-    int y_coord = nextBlock.col;
-    for (int i = 0; i < 4; i++) {
-        // GotoTop
-    }
-
+    int x_coord = nextBlock.col;
+    int y_coord = nextBlock.row;
+    // GotoTop
+    cout << "(" << nextBlock.row << ", " << nextBlock.col << ") -> ";
     if (y_coord - 1 >= 0 && (blocks[y_coord - 1][x_coord].color == "white" ||
                              blocks[y_coord - 1][x_coord].color == "green")) {
         blocks[y_coord - 1][x_coord].homePath = "bottom";
-        blocks[y_coord - 1][x_coord].color = "grey";
         if (blocks[y_coord - 1][x_coord].color == "green") {
             return pair(y_coord - 1, x_coord);
         }
+        blocks[y_coord - 1][x_coord].color = "grey";
+        cout << " top: (" << y_coord - 1 << ", " << x_coord << ") ";
         list.push(blocks[y_coord - 1][x_coord]);
-        returnValue = 0;
     }
     // GotoRight
-    else if (x_coord + 1 < cols &&
-             (blocks[y_coord][x_coord + 1].color == "white" ||
-              blocks[y_coord][x_coord + 1].color == "green")) {
+    if (x_coord + 1 < cols && (blocks[y_coord][x_coord + 1].color == "white" ||
+                               blocks[y_coord][x_coord + 1].color == "green")) {
         blocks[y_coord][x_coord + 1].homePath = "left";
-        blocks[y_coord][x_coord + 1].color = "grey";
+        cout << "right: (" << y_coord << ", " << x_coord + 1 << ") ";
         if (blocks[y_coord][x_coord + 1].color == "green") {
             return pair(y_coord, x_coord + 1);
         }
+        blocks[y_coord][x_coord + 1].color = "grey";
         list.push(blocks[y_coord][x_coord + 1]);
-        returnValue = 1;
     }
     // GotoBottom
-    else if (y_coord + 1 < rows &&
-             (blocks[y_coord + 1][x_coord].color == "white" ||
-              blocks[y_coord + 1][x_coord].color == "green")) {
+    if (y_coord + 1 < rows && (blocks[y_coord + 1][x_coord].color == "white" ||
+                               blocks[y_coord + 1][x_coord].color == "green")) {
         blocks[y_coord + 1][x_coord].homePath = "top";
-        blocks[y_coord + 1][x_coord].color = "grey";
         if (blocks[y_coord + 1][x_coord].color == "green") {
             return pair(y_coord + 1, x_coord);
         }
+        blocks[y_coord + 1][x_coord].color = "grey";
+        cout << "bottom: (" << y_coord + 1 << ", " << x_coord << ") ";
         list.push(blocks[y_coord + 1][x_coord]);
-        returnValue = 2;
     }
     // GotoLeft
-    else if (x_coord - 1 >= 0 &&
-             (blocks[y_coord][x_coord - 1].color == "white" ||
-              blocks[y_coord][x_coord - 1].color == "green")) {
+    if (x_coord - 1 >= 0 && (blocks[y_coord][x_coord - 1].color == "white" ||
+                             blocks[y_coord][x_coord - 1].color == "green")) {
         blocks[y_coord][x_coord - 1].homePath = "right";
-        blocks[y_coord][x_coord - 1].color = "grey";
         if (blocks[y_coord][x_coord - 1].color == "green") {
             return pair(y_coord, x_coord - 1);
         }
+        blocks[y_coord][x_coord - 1].color = "grey";
+        cout << "left(" << y_coord << ", " << x_coord - 1 << ") ";
         list.push(blocks[y_coord][x_coord - 1]);
-        returnValue = 3;
     }
     blocks[y_coord][x_coord].color = "black";
+    cout << endl;
     return pair(-1, -1);
 }
 int matrix::bestFirstMove() {
@@ -162,10 +157,10 @@ int matrix::bestFirstMove() {
 void matrix::setBlockHeuristic() {
 }
 void matrix::getPath(Cursor &cursor, pair<int, int> &goal) {
-    Cursor backtracker(vector(goal.second, goal.first));
-    printf("here");
+    Cursor backtracker({goal.second, goal.first});
     string direction;
     while (blocks[backtracker.pos_y][backtracker.pos_x].homePath != "") {
+
         direction = blocks[backtracker.pos_y][backtracker.pos_x].homePath;
         if (direction == "bottom") {
             cursor.path.insert(cursor.path.begin(), "top");
@@ -175,7 +170,7 @@ void matrix::getPath(Cursor &cursor, pair<int, int> &goal) {
             backtracker.pos_x--;
         } else if (direction == "top") {
             cursor.path.insert(cursor.path.begin(), "bottom");
-            backtracker.pos_y++;
+            backtracker.pos_y--;
         } else if (direction == "right") {
             cursor.path.insert(cursor.path.begin(), "left");
             backtracker.pos_x++;
@@ -205,11 +200,6 @@ void matrix::printHeuristics() {
     for (int i = 0; i < rows; ++i) {
         for (int j = 0; j < cols; ++j) {
             cout << blocks[i][j].heuristic << " ";
-            // if (blocks[i][j].color == "red") {
-            //     cout << "   ";
-            // } else {
-            //     cout << " ";
-            // }
         }
         cout << endl;
     }
