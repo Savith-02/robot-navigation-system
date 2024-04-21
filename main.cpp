@@ -42,23 +42,30 @@ int main() {
     Cursor cursor;
     cursor.pos_x = startingPos[0];
     cursor.pos_y = startingPos[1];
-
     markBlockGoals(Matrix, goalPositions);
     markWalls(Matrix, walls);
     Matrix.printColors();
-    while (cursor.atGreen == true) {
-        switch (Matrix.getDirection(cursor)) {
+
+    while (cursor.atGreen == false) {
+        switch (Matrix.move(cursor)) {
         case 0:
-            Matrix.goTop(cursor);
+            cursor.path.push_back("top");
             break;
         case 1:
-            Matrix.goLeft(cursor);
+            cursor.path.push_back("right");
             break;
         case 2:
+            cursor.path.push_back("bottom");
             break;
         case 3:
+            cursor.path.push_back("left");
             break;
+        case 4:
+            cursor.path.pop_back();
+            cursor.backTrack(Matrix);
+            cursor.atGreen = true;
         }
     }
+    cursor.printPath();
     return 0;
 }
