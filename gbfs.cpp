@@ -1,14 +1,14 @@
 #include "classes.h"
-#include <cmath>
 
 void matrix::initHeuristics(vector<pair<int, int>> goalPositions) {
-    int distance;
+    int distanceFromGoals;
     for (int m = 0; m < goalPositions.size(); m++) {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
-                distance = sqrt(pow(goalPositions[m].first - j, 2) +
-                                pow(goalPositions[m].second - i, 2));
-                blocks[i][j].heuristic = min(distance, blocks[i][j].heuristic);
+                distanceFromGoals = sqrt(pow(goalPositions[m].first - j, 2) +
+                                         pow(goalPositions[m].second - i, 2));
+                blocks[i][j].heuristic =
+                    min(distanceFromGoals, blocks[i][j].heuristic);
             }
         }
     }

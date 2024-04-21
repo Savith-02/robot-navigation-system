@@ -72,3 +72,42 @@ void markWalls(matrix &Matrix, const vector<tuple<int, int, int, int>> &walls) {
         }
     }
 }
+int getNearestGoalX(const vector<pair<int, int>> &goalPositions) {
+    // Initialize the minimum x-coordinate and its index with the first goal
+    // position
+    int min_x = goalPositions[0].first;
+
+    // Iterate through the goal positions starting from the second one
+    for (size_t i = 1; i < goalPositions.size(); ++i) {
+        // If the current x-coordinate is lower than the minimum x-coordinate
+        // encountered so far, update the minimum x-coordinate
+        if (goalPositions[i].first < min_x) {
+            min_x = goalPositions[i].first;
+        }
+    }
+
+    return min_x;
+}
+int getFarthestGoalX(const vector<pair<int, int>> &goalPositions) {
+    int max_x = goalPositions[0].first;
+
+    // Iterate through the goal positions starting from the second one
+    for (size_t i = 1; i < goalPositions.size(); ++i) {
+        // If the current x-coordinate is higher than the maximum x-coordinate
+        // encountered so far, update the maximum x-coordinate
+        if (goalPositions[i].first > max_x) {
+            max_x = goalPositions[i].first;
+        }
+    }
+    return max_x;
+}
+string getBestOption(const vector<pair<int, int>> &goalPositions, int start_x) {
+    int min_x = getNearestGoalX(goalPositions);
+    int max_x = getNearestGoalX(goalPositions);
+
+    if (min_x < start_x && max_x < start_x) {
+        return "anitClockWise";
+    } else {
+        return "clockWise";
+    }
+}

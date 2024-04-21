@@ -86,7 +86,7 @@ int main(int argc, char *argv[]) {
     else if (method == "GBFS") {
 
         Matrix.initHeuristics(goalPositions);
-        // Matrix.printHeuristics();
+        Matrix.printHeuristics();
         priority_queue<block> blockList;
         block nextBlock;
         Matrix.blocks[cursor.pos_y][cursor.pos_x].color = "grey";
@@ -117,8 +117,72 @@ int main(int argc, char *argv[]) {
                 Matrix.getPath(cursor, endGoal);
             }
         }
-    } else {
+    } else if (method == "AS") {
+        Matrix.initHeuristics(goalPositions);
+        Matrix.printHeuristics();
+        Matrix.improveHeuristc(startingPos);
+        Matrix.printHeuristics();
+        priority_queue<block> blockList;
+        block nextBlock;
+        Matrix.blocks[cursor.pos_y][cursor.pos_x].color = "grey";
+        blockList.push(Matrix.blocks[cursor.pos_y][cursor.pos_x]);
 
+        while (cursor.atGreen == false && !blockList.empty()) { // Best First
+            nextBlock = blockList.top();
+            blockList.pop();
+            endGoal = Matrix.updateBSList(blockList, nextBlock);
+            if (endGoal != pair(-1, -1)) {
+                cursor.atGreen = true;
+                Matrix.getPath(cursor, endGoal);
+            }
+        }
+    } else if (method == "CUS1") {
+        string option = getBestOption(goalPositions, startingPos[0]);
+        if (option == "clockWise") {
+            while (cursor.atGreen == false) { // DFS
+                switch (Matrix.DFSmove(cursor)) {
+                case 0:
+                    cursor.path.push_back("up");
+                    break;
+                case 1:
+                    cursor.path.push_back("left");
+                    break;
+                case 2:
+                    cursor.path.push_back("down");
+                    break;
+                case 3:
+                    cursor.path.push_back("right");
+                    break;
+                case 4:
+                    cursor.path.pop_back();
+                    cursor.backTrack(Matrix);
+                }
+            }
+        } else {
+            while (cursor.atGreen == false) { // DFS
+                switch (Matrix.DFSmoveAntiClockwise(cursor)) {
+                case 0:
+                    cursor.path.push_back("up");
+                    break;
+                case 1:
+                    cursor.path.push_back("left");
+                    break;
+                case 2:
+                    cursor.path.push_back("down");
+                    break;
+                case 3:
+                    cursor.path.push_back("right");
+                    break;
+                case 4:
+                    cursor.path.pop_back();
+                    cursor.backTrack(Matrix);
+                }
+            }
+        }
+        endGoal = pair(cursor.pos_y, cursor.pos_x);
+    }
+
+    else {
         cout << "Invalid method";
         return 1;
     }
