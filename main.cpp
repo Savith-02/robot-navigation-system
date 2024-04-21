@@ -39,33 +39,34 @@ int main() {
     matrix Matrix(gridSize[0], gridSize[1]); // Initialize grid
     Matrix.blocks[startingPos[1]][startingPos[0]].color = "red";
 
-    Cursor cursor; // Initialise the position tracker
-    cursor.pos_x = startingPos[0];
-    cursor.pos_y = startingPos[1];
+    Cursor cursor(startingPos); // Initialise the position tracker
 
     markBlockGoals(Matrix, goalPositions); // Mark the greens
     markWalls(Matrix, walls);              // Mark the walls
     Matrix.printColors();                  // Prints the grid
 
+    // while (cursor.atGreen == false) { // DFS
+    //     switch (Matrix.DFSmove(cursor)) {
+    //     case 0:
+    //         cursor.path.push_back("top");
+    //         break;
+    //     case 1:
+    //         cursor.path.push_back("right");
+    //         break;
+    //     case 2:
+    //         cursor.path.push_back("bottom");
+    //         break;
+    //     case 3:
+    //         cursor.path.push_back("left");
+    //         break;
+    //     case 4:
+    //         cursor.path.pop_back();
+    //         cursor.backTrack(Matrix);
+    //     }
+    // }
+    // cursor.printPath();
+    // cursor.cursorReset();
     while (cursor.atGreen == false) { // DFS
-        switch (Matrix.move(cursor)) {
-        case 0:
-            cursor.path.push_back("top");
-            break;
-        case 1:
-            cursor.path.push_back("right");
-            break;
-        case 2:
-            cursor.path.push_back("bottom");
-            break;
-        case 3:
-            cursor.path.push_back("left");
-            break;
-        case 4:
-            cursor.path.pop_back();
-            cursor.backTrack(Matrix);
-        }
     }
-    cursor.printPath();
     return 0;
 }

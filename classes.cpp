@@ -3,7 +3,17 @@
 #include <sstream>
 #include <string>
 #include <vector>
-
+Cursor::Cursor(vector<int> start) {
+    start_x = start[0];
+    start_y = start[1];
+    pos_x = start[0];
+    pos_y = start[1];
+}
+void Cursor::cursorReset() {
+    pos_x = start_x;
+    pos_y = start_y;
+    atGreen = false;
+}
 matrix::matrix(int r, int c) : rows(r), cols(c) {
     // Allocate memory for rows
     blocks = new block *[rows];
@@ -17,7 +27,7 @@ matrix::matrix(int r, int c) : rows(r), cols(c) {
         }
     }
 }
-int matrix::move(Cursor &cursor) {
+int matrix::DFSmove(Cursor &cursor) {
     int returnValue;
 
     // GotoTop
@@ -65,6 +75,10 @@ int matrix::move(Cursor &cursor) {
     }
 
     return returnValue;
+}
+int matrix::bestFirstMove() {
+}
+void setBlockeuristic() {
 }
 
 void matrix::printColors() {
