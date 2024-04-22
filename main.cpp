@@ -86,7 +86,7 @@ int main(int argc, char *argv[]) {
     else if (method == "GBFS") {
 
         Matrix.initHeuristics(goalPositions);
-        Matrix.printHeuristics();
+        // Matrix.printHeuristics();
         priority_queue<block> blockList;
         block nextBlock;
         Matrix.blocks[cursor.pos_y][cursor.pos_x].color = "grey";
@@ -119,9 +119,9 @@ int main(int argc, char *argv[]) {
         }
     } else if (method == "AS") {
         Matrix.initHeuristics(goalPositions);
-        Matrix.printHeuristics();
+        // Matrix.printHeuristics();
         Matrix.improveHeuristc(startingPos);
-        Matrix.printHeuristics();
+        // Matrix.printHeuristics();
         priority_queue<block> blockList;
         block nextBlock;
         Matrix.blocks[cursor.pos_y][cursor.pos_x].color = "grey";
@@ -136,7 +136,7 @@ int main(int argc, char *argv[]) {
                 Matrix.getPath(cursor, endGoal);
             }
         }
-    } else if (method == "CUS1") {
+    } else if (method == "CUS1") { // A modified version of DFS
         string option = getBestOption(goalPositions, startingPos[0]);
         if (option == "clockWise") {
             while (cursor.atGreen == false) { // DFS
@@ -180,9 +180,25 @@ int main(int argc, char *argv[]) {
             }
         }
         endGoal = pair(cursor.pos_y, cursor.pos_x);
-    }
+    } else if (method == "CUS2") { // A modified version of GBFS: basically
+                                   // cursor can got to any direction
+        Matrix.initHeuristics(goalPositions);
+        // Matrix.printHeuristics();
+        priority_queue<block> blockList;
+        block nextBlock;
+        Matrix.blocks[cursor.pos_y][cursor.pos_x].color = "grey";
+        blockList.push(Matrix.blocks[cursor.pos_y][cursor.pos_x]);
 
-    else {
+        while (cursor.atGreen == false && !blockList.empty()) { // Best First
+            nextBlock = blockList.top();
+            blockList.pop();
+            endGoal = Matrix.updateCUS2(blockList, nextBlock);
+            if (endGoal != pair(-1, -1)) {
+                cursor.atGreen = true;
+                Matrix.getPathV2(cursor, endGoal);
+            }
+        }
+    } else {
         cout << "Invalid method";
         return 1;
     }

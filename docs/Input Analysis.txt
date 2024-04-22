@@ -1,0 +1,14 @@
+input.txt : 12, 8, 14, 11, 12, 26
+input2.txt : 83, 5, 15, 10, 25, 73
+input3.txt : 31, 2, 3, 3, 149, 9
+input4.txt : 8, 2, 3, 3, 33, 9
+input5.txt : 12, 3,  4, 3, 141, 12
+input6.txt : 2, 10, 6, 3, 23, 11
+
+	CUS1	CUS2	AS	GBFS	DFS	BFS
+input.txt	12	8	14	11	12	26
+input2.txt	83	5	15	10	25	73
+input3.txt	31	2	3	3	147	9
+input4.txt	8	2	3	3	33	9
+input5.txt	12	3	4	3	141	12
+input6.txt	2	10	6	3	23	11
