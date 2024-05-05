@@ -36,6 +36,10 @@ METHOD can be either of the following: DFS, BFS, GBFS, AS, CUS1, CUS2
 
 INPUT-FILE needs a file path
 
+Example run:
+```
+.\a.exe .\inputs\input.txt CUS1
+```
 
 ## What Is Outputted:
 When a solution is found, the solver outputs the following information:
