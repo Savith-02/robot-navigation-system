@@ -1,0 +1,2 @@
+g++ main.cpp classes.cpp gbfs.cpp bfs.cpp dfs.cpp as.cpp cus1.cpp cus2.cpp
+.\a.exe input5.txt DFS
