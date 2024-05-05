@@ -41,9 +41,13 @@ INPUT-FILE needs a file path
 When a solution is found, the solver outputs the following information:
 
 Filename: Name of the problem file.
+
 Method: Search algorithm used.
+
 Goal: The goal cell reached.
+
 Number of Nodes: Total number of nodes created during the search.
+
 Path: Sequence of moves from the initial configuration to the goal cell.
 
 
